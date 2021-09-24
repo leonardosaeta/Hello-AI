@@ -21,7 +21,7 @@ model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
 model.compile(optimizer='RMSprop', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(x_train, y_train,  epochs=5)
+model.fit(x_train, y_train,  epochs=3)
 
 model.save('handwritten.model')
 
@@ -32,7 +32,8 @@ print(loss)
 print(accuracy)
 '''
 model = tf.keras.models.load_model('handwritten.model')
-image_number = 1
+image_number = 0
+correct_prediction_check = 0
 while os.path.isfile(f"My numbers/anynumber{image_number}.png"):
     try:
         img = cv2.imread(f"My numbers/anynumber{image_number}.png")[:,:,0]
@@ -41,8 +42,12 @@ while os.path.isfile(f"My numbers/anynumber{image_number}.png"):
         print(f"the number may be a {np.argmax(prediction)}")
         plt.imshow(img[0], cmap=plt.cm.binary)
         plt.show()
+
+        if (image_number == np.argmax(prediction)):
+            correct_prediction_check = correct_prediction_check + 1
+
     except:
         print("Error")
     finally:
         image_number = image_number + 1
-
+print(f"The got {correct_prediction_check} out of {image_number} images correct")
